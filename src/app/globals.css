@@ -1,88 +1,11 @@
-@import "tailwindcss";
-
-:root {
-  /* Citrus crate-label palette */
-  --color-paper: #fbfaf2;
-  --color-paper-deep: #f4f0dd;
-  --color-ink: #1b1b14;
-  --color-ink-soft: #4a473a;
-  --color-lemon: #e9e23f;
-  --color-lemon-soft: #f5efa8;
-  --color-zest: #b79f00;
-  --color-leaf: #5c8a34;
-  --color-leaf-soft: #e6f0da;
-  --color-brick: #a83a2e;
-  --color-brick-soft: #f4ded9;
-  --color-ash: #8a8677;
-  --color-line: #ddd8bf;
-
-  --font-display: var(--font-fraunces);
-  --font-body: var(--font-plex-sans);
-  --font-mono: var(--font-plex-mono);
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overscroll-behavior: none; /* kills pull-to-refresh/bounce that fights the game */
 }
 
-@theme inline {
-  --color-paper: var(--color-paper);
-  --color-paper-deep: var(--color-paper-deep);
-  --color-ink: var(--color-ink);
-  --color-ink-soft: var(--color-ink-soft);
-  --color-lemon: var(--color-lemon);
-  --color-lemon-soft: var(--color-lemon-soft);
-  --color-zest: var(--color-zest);
-  --color-leaf: var(--color-leaf);
-  --color-leaf-soft: var(--color-leaf-soft);
-  --color-brick: var(--color-brick);
-  --color-brick-soft: var(--color-brick-soft);
-  --color-ash: var(--color-ash);
-  --color-line: var(--color-line);
-
-  --font-display: var(--font-display);
-  --font-body: var(--font-body);
-  --font-mono: var(--font-mono);
-}
-
-body {
-  background: var(--color-paper);
-  color: var(--color-ink);
-  font-family: var(--font-body), system-ui, sans-serif;
-}
-
-/* subtle paper grain so the flat lemon block doesn't feel like a flat AI default */
-.grain {
-  position: relative;
-}
-.grain::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-:focus-visible {
-  outline: 2px solid var(--color-zest);
-  outline-offset: 2px;
-}
-
-@keyframes stamp-in {
-  0% {
-    opacity: 0;
-    transform: scale(1.04) translateY(-4px);
-  }
-  60% {
-    opacity: 1;
-    transform: scale(0.99) translateY(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+* {
+  -webkit-tap-highlight-color: transparent; /* removes the gray flash on mobile taps */
 }
