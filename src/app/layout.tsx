@@ -1,4 +1,11 @@
 import type { Metadata, Viewport } from 'next';
+import { Fredoka_One } from 'next/font/google';
+
+const fredokaOne = Fredoka_One({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'GTA 67',
@@ -15,7 +22,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={fredokaOne.className}>
       <body>{children}</body>
     </html>
   );

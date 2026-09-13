@@ -7,7 +7,16 @@ export default function CharacterPage() {
   const [baseImage, setBaseImage] = useState<string | null>(null);
 
   return (
-    <main style={{ minHeight: '100vh', background: '#0a0a0d' }}>
+    <main
+      style={{
+        minHeight: '100vh',
+        backgroundImage:
+          "linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.35)), url('/background1.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
       <h1 style={{ color: 'white', textAlign: 'center', paddingTop: 24 }}>Choose your driver</h1>
       {!baseImage ? (
         <CharacterSelect onPicked={setBaseImage} />

@@ -2,7 +2,6 @@
 import { useEffect } from 'react';
 import { useGameStore } from '@/lib/store';
 
-// Renders nothing — just wires the physical keyboard into the shared controls store.
 export function KeyboardControls() {
   const setControl = useGameStore((s) => s.setControl);
 
@@ -10,10 +9,12 @@ export function KeyboardControls() {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') setControl('left', true);
       if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') setControl('right', true);
+      if (e.key === ' ' || e.key === 'ArrowDown') setControl('brake', true);
     };
     const up = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') setControl('left', false);
       if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') setControl('right', false);
+      if (e.key === ' ' || e.key === 'ArrowDown') setControl('brake', false);
     };
     window.addEventListener('keydown', down);
     window.addEventListener('keyup', up);
@@ -23,5 +24,7 @@ export function KeyboardControls() {
     };
   }, [setControl]);
 
+  return null;
+}
   return null;
 }

@@ -21,7 +21,7 @@ export default function Home() {
         textAlign: 'center',
       }}
     >
-      <h1 style={{ fontSize: 64, fontWeight: 900, letterSpacing: 2, margin: 0 }}>GTA 67</h1>
+      <h1 style={{ fontSize: 64, fontWeight: 900, letterSpacing: 4, margin: 0, textShadow: '2px 2px 0px rgba(255,0,0,0.5), 4px 4px 0px rgba(0,255,255,0.3)', transform: 'skewX(-5deg)' }}>GTA 67 Drive</h1>
       <p style={{ opacity: 0.85, maxWidth: 420 }}>
         Pick your driver, customize your look, hit the coastal highway at sunset.
       </p>
