@@ -4,6 +4,7 @@ type Gender = 'male' | 'female';
 interface Controls {
   left: boolean;
   right: boolean;
+  accelerate: boolean;
   brake: boolean;
 }
 
@@ -24,7 +25,7 @@ interface GameState {
 export const useGameStore = create<GameState>((set) => ({
   gender: 'male',
   avatarDataUrl: null,
-  controls: { left: false, right: false, brake: false },
+  controls: { left: false, right: false, accelerate: false, brake: false },
   score: 0,
   crashed: false,
   setGender: (gender) => set({ gender }),

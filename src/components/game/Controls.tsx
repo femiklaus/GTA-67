@@ -5,7 +5,7 @@ import { useGameStore } from '@/lib/store';
 export function Controls() {
   const setControl = useGameStore((s) => s.setControl);
 
-  const bind = (key: 'left' | 'right' | 'brake') => ({
+  const bind = (key: 'left' | 'right' | 'accelerate' | 'brake') => ({
     onPointerDown: (e: PointerEvent) => {
       e.preventDefault();
       setControl(key, true);
@@ -36,6 +36,29 @@ export function Controls() {
       <div
         style={{
           position: 'absolute',
+          left: 'max(16px, env(safe-area-inset-left))',
+          bottom: 'max(24px, env(safe-area-inset-bottom))',
+          zIndex: 10,
+        }}
+      >
+        <button
+          style={{
+            ...buttonStyle,
+            borderRadius: 16,
+            background: 'rgba(34, 197, 94, 0.55)',
+            fontSize: 'clamp(12px, 3vw, 15px)',
+            fontWeight: 800,
+          }}
+          {...bind('accelerate')}
+          aria-label="Accelerate"
+        >
+          GAS
+        </button>
+      </div>
+
+      <div
+        style={{
+          position: 'absolute',
           right: 'max(16px, env(safe-area-inset-right))',
           bottom: 'max(24px, env(safe-area-inset-bottom))',
           display: 'flex',
@@ -51,7 +74,7 @@ export function Controls() {
       <div
         style={{
           position: 'absolute',
-          left: 'max(16px, env(safe-area-inset-left))',
+          left: 'max(90px, env(safe-area-inset-left) + 74px)',
           bottom: 'max(24px, env(safe-area-inset-bottom))',
           zIndex: 10,
         }}

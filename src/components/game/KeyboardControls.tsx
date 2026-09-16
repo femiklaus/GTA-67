@@ -9,12 +9,14 @@ export function KeyboardControls() {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') setControl('left', true);
       if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') setControl('right', true);
-      if (e.key === ' ' || e.key === 'ArrowDown') setControl('brake', true);
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') setControl('accelerate', true);
+      if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S' || e.key === ' ') setControl('brake', true);
     };
     const up = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') setControl('left', false);
       if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') setControl('right', false);
-      if (e.key === ' ' || e.key === 'ArrowDown') setControl('brake', false);
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') setControl('accelerate', false);
+      if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S' || e.key === ' ') setControl('brake', false);
     };
     window.addEventListener('keydown', down);
     window.addEventListener('keyup', up);
@@ -24,7 +26,5 @@ export function KeyboardControls() {
     };
   }, [setControl]);
 
-  return null;
-}
   return null;
 }

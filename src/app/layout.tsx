@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
-import { Fredoka_One } from 'next/font/google';
+import { Bebas_Neue } from 'next/font/google';
 
-const fredokaOne = Fredoka_One({
+const bebasNeue = Bebas_Neue({
   weight: '400',
   subsets: ['latin'],
   display: 'swap',
@@ -22,7 +22,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={fredokaOne.className}>
+    <html lang="en" className={bebasNeue.className}>
       <body>{children}</body>
     </html>
   );

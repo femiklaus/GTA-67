@@ -1,12 +1,13 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { CAR_CONFIG } from '@/config/car.config';
 import { CHARACTER_CONFIG } from '@/config/character.config';
 import { useGameStore } from '@/lib/store';
+import { Model as CarAsset } from './CarAsset';
 
 export function CarModel() {
-  const { length, width, height } = CAR_CONFIG.dimensions;
+  const { height, length } = CAR_CONFIG.dimensions;
   const avatarDataUrl = useGameStore((s) => s.avatarDataUrl);
   const braking = useGameStore((s) => s.controls.brake);
   const [driverTexture, setDriverTexture] = useState<THREE.Texture | null>(null);
@@ -19,14 +20,14 @@ export function CarModel() {
 
   return (
     <group>
-      <mesh position={[0, height / 2, 0]} castShadow>
-        <boxGeometry args={[width, height * 0.6, length]} />
-        <meshStandardMaterial color={CAR_CONFIG.bodyColor} metalness={0.6} roughness={0.35} />
-      </mesh>
-      <mesh position={[0, height * 0.95, -length * 0.05]} castShadow>
-        <boxGeometry args={[width * 0.85, height * 0.55, length * 0.5]} />
-        <meshStandardMaterial color={CAR_CONFIG.cabinColor} metalness={0.3} roughness={0.4} />
-      </mesh>
+      <Suspense fallback={null}>
+      <CarAsset
+  scale={CAR_CONFIG.assetScale}
+  position={[0, CAR_CONFIG.assetYOffset, 0]}
+  rotation={[CAR_CONFIG.assetRotationX, CAR_CONFIG.assetRotationY, CAR_CONFIG.assetRotationZ]}
+  color={CAR_CONFIG.bodyColor}
+/>
+      </Suspense>
 
       {driverTexture && (
         <mesh position={CHARACTER_CONFIG.driverPlane.position}>
@@ -35,28 +36,19 @@ export function CarModel() {
         </mesh>
       )}
 
-      {[
-        [-width / 2, 0.35, length / 2 - 0.6],
-        [width / 2, 0.35, length / 2 - 0.6],
-        [-width / 2, 0.35, -length / 2 + 0.6],
-        [width / 2, 0.35, -length / 2 + 0.6],
-      ].map((pos, i) => (
-        <mesh key={i} position={pos as [number, number, number]} rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.35, 0.35, 0.3, 12]} />
-          <meshStandardMaterial color={CAR_CONFIG.wheelColor} roughness={0.9} />
-        </mesh>
-      ))}
-
-      {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * (width / 2 - 0.15), height / 2, length / 2 - 0.05]}>
-          <boxGeometry args={[0.25, 0.15, 0.05]} />
-          <meshStandardMaterial
-            color={CAR_CONFIG.tailLightColor}
-            emissive={CAR_CONFIG.tailLightColor}
-            emissiveIntensity={braking ? 4 : 1.2}
-          />
-        </mesh>
-      ))}
+      {/* Brake glow — a simple emissive plane overlaid near the rear, since the real
+          model's own material isn't ours to reassign brightness on. Reposition the
+          z-value once you see where the asset's actual rear sits relative to origin. */}
+      <mesh position={[0, height * 0.5, length / 2 - 0.1]}>
+        <boxGeometry args={[0.5, 0.15, 0.05]} />
+        <meshStandardMaterial
+          color={CAR_CONFIG.tailLightColor}
+          emissive={CAR_CONFIG.tailLightColor}
+          emissiveIntensity={braking ? 4 : 1.2}
+          transparent
+          opacity={0.9}
+        />
+      </mesh>
     </group>
   );
 }

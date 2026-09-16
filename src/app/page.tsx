@@ -19,10 +19,14 @@ export default function Home() {
         color: 'white',
         fontFamily: 'system-ui, sans-serif',
         textAlign: 'center',
+        padding: '20px',
       }}
     >
-      <h1 style={{ fontSize: 64, fontWeight: 900, letterSpacing: 4, margin: 0, textShadow: '2px 2px 0px rgba(255,0,0,0.5), 4px 4px 0px rgba(0,255,255,0.3)', transform: 'skewX(-5deg)' }}>GTA 67 Drive</h1>
-      <p style={{ opacity: 0.85, maxWidth: 420 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0, lineHeight: 1 }}>
+        <h1 style={{ fontSize: 'clamp(48px, 12vw, 120px)', fontWeight: 900, letterSpacing: 4, margin: 0, textShadow: '2px 2px 0px rgba(255,0,0,0.5), 4px 4px 0px rgba(0,255,255,0.3)', transform: 'skewX(-5deg)' }}>GTA 67</h1>
+        <h2 style={{ fontSize: 'clamp(32px, 7vw, 72px)', fontWeight: 900, letterSpacing: 2, margin: 0, textShadow: '2px 2px 0px rgba(255,0,0,0.5), 4px 4px 0px rgba(0,255,255,0.3)', transform: 'skewX(-5deg)', opacity: 0.9 }}>Drive</h2>
+      </div>
+      <p style={{ opacity: 0.85, maxWidth: '90%', fontSize: 'clamp(14px, 2.5vw, 18px)', lineHeight: 1.5, margin: '8px 0 0 0' }}>
         Pick your driver, customize your look, hit the coastal highway at sunset.
       </p>
       <Link
