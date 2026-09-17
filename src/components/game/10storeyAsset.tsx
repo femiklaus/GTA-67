@@ -6,18 +6,20 @@ Command: npx gltfjsx@6.5.3 public/models/10storey.glb -o src/components/game/10s
 import * as THREE from 'three'
 import React from 'react'
 import { useGLTF } from '@react-three/drei'
-import { GLTF } from 'three-stdlib'
+import type { ThreeElements } from '@react-three/fiber'
+import type { GLTF } from 'three-stdlib'
+
+type GroupProps = ThreeElements['group']
 
 type GLTFResult = GLTF & {
   nodes: {
     mesh_node: THREE.Mesh
   }
-  materials: {}
-  animations: GLTFAction[]
+  materials: Record<string, THREE.Material>
 }
 
-export function Model(props: JSX.IntrinsicElements['group']) {
-  const { nodes, materials } = useGLTF('/models/10storey.glb') as GLTFResult
+export function Model(props: GroupProps) {
+  const { nodes, materials } = useGLTF('/models/10storey.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>
       <mesh geometry={nodes.mesh_node.geometry} material={nodes.mesh_node.material} position={[-0.001, -0.001, -0.002]} scale={0.95} />

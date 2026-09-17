@@ -17,8 +17,8 @@ export function BuildingsAsset() {
   const buildings = useMemo(() => {
     return Array.from({ length: BUILDING_CONFIG.count }).map((_, i) => {
       const angle = (i / BUILDING_CONFIG.count) * Math.PI * 2;
-      const r = BUILDING_CONFIG.radius + (Math.random() - 0.5) * 60;
-      const variant = VARIANTS[Math.floor(Math.random() * VARIANTS.length)];
+      const r = BUILDING_CONFIG.radius + (Math.random() - 0.5) * 80;
+      const variant = VARIANTS[(i + Math.floor(Math.random() * VARIANTS.length)) % VARIANTS.length];
       return {
         position: [Math.sin(angle) * r, 0, -Math.cos(angle) * r] as [number, number, number],
         variant,

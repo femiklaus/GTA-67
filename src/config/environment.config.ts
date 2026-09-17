@@ -32,9 +32,9 @@ export const ROAD_CONFIG = {
 };
 
 export const PALM_CONFIG = {
-  spacing: 24,
-  offsetFromRoad: 11,
-  jitter: 3,
+  spacing: 14,
+  offsetFromRoad: 13,
+  jitter: 5,
   trunkHeight: [7, 11] as [number, number],
   trunkColor: '#5c4a3a',
   frondColorTop: '#2fe06a',
@@ -46,8 +46,8 @@ export const PALM_CONFIG = {
 };
 
 export const BUILDING_CONFIG = {
-  count: 26,
-  radius: 260,
+  count: 48,
+  radius: 220,
   heightRange: [24, 90] as [number, number],
   colorPalette: VICE_PALETTE.buildingBase,
   neonTrimColors: [

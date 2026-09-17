@@ -54,11 +54,19 @@ function DrivingRig({
       if (Math.abs(speed.current) < 0.03) speed.current = 0;
     }
 
-    const steerInput = (right ? 1 : 0) - (left ? 1 : 0);
-    const steeringPower = THREE.MathUtils.clamp(1.9 - Math.min(Math.abs(speed.current) / CAR_CONFIG.maxSpeed, 1) * 1.1, 0.85, 1.9);
-    steer.current = THREE.MathUtils.lerp(steer.current, steerInput, 8 * delta);
-    lateral.current += steer.current * CAR_CONFIG.steerSpeed * steeringPower * delta * 0.9;
+    // After:
+const steerInput = (right ? 1 : 0) - (left ? 1 : 0);
+const steeringPower = THREE.MathUtils.clamp(1.9 - Math.min(Math.abs(speed.current) / CAR_CONFIG.maxSpeed, 1) * 1.1, 0.85, 1.9);
+steer.current = THREE.MathUtils.lerp(steer.current, steerInput, 8 * delta);
+lateral.current += steer.current * CAR_CONFIG.steerSpeed * steeringPower * delta * 0.9;
 
+// Self-centering: when the player isn't actively steering, pull lateral back
+// toward 0 proportionally to how far off-center it is. This is what makes an
+// arcade car feel like it "wants" to sit in the middle of the road rather
+// than holding whatever offset it was last steered to.
+if (Math.abs(steerInput) < 0.01 && Math.abs(speed.current) > 0.5) {
+  lateral.current -= lateral.current * CAR_CONFIG.centeringAssist * delta;
+}
     const roadMaxLateral = ROAD_CONFIG.width * 0.5 - CAR_CONFIG.dimensions.width * 0.7;
     const edgeBuffer = 1.6;
     const edgeDistance = roadMaxLateral - Math.abs(lateral.current);

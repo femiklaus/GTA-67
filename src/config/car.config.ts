@@ -24,7 +24,7 @@ assetRotationX: -Math.PI / 2,  // most common fix for a Z-up export landing in a
   assetRotationZ: 0,
   assetYOffset: 0,    
 
-
+   centeringAssist: 1.4,
 
 
 

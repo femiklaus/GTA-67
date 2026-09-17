@@ -6,20 +6,22 @@ Command: npx gltfjsx@6.5.3 public/models/car.glb -o src/components/game/CarAsset
 import * as THREE from 'three'
 import React, { useMemo } from 'react'
 import { useGLTF } from '@react-three/drei'
-import { GLTF } from 'three-stdlib'
+import type { ThreeElements } from '@react-three/fiber'
+import type { GLTF } from 'three-stdlib'
+
+type GroupProps = ThreeElements['group']
 
 type GLTFResult = GLTF & {
   nodes: {
     mesh_node: THREE.Mesh
   }
-  materials: {}
-  animations: GLTFAction[]
+  materials: Record<string, THREE.Material>
 }
 
 export function Model(
-  props: JSX.IntrinsicElements['group'] & { color?: string }
+  props: GroupProps & { color?: string }
 ) {
-  const { nodes } = useGLTF('/models/car.glb') as GLTFResult
+  const { nodes } = useGLTF('/models/car.glb') as unknown as GLTFResult
   const { color, ...groupProps } = props
 
   // Clone the baked-in material so we don't mutate the shared cached asset,
