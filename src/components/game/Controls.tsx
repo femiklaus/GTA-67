@@ -31,13 +31,21 @@ export function Controls() {
     backdropFilter: 'blur(4px)',
   };
 
+  // All control clusters sit on one raised plane, leaving clear space beneath
+  // the steering buttons for the instruction line.
+  const RAISED = 'max(78px, calc(env(safe-area-inset-bottom) + 78px))';
+
   return (
     <>
+      {/* left cluster: GAS + BRAKE side by side on the raised plane */}
       <div
         style={{
           position: 'absolute',
           left: 'max(16px, env(safe-area-inset-left))',
-          bottom: 'max(24px, env(safe-area-inset-bottom))',
+          bottom: RAISED,
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 14,
           zIndex: 10,
         }}
       >
@@ -54,31 +62,6 @@ export function Controls() {
         >
           GAS
         </button>
-      </div>
-
-      <div
-        style={{
-          position: 'absolute',
-          right: 'max(16px, env(safe-area-inset-right))',
-          bottom: 'max(24px, env(safe-area-inset-bottom))',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 14,
-          zIndex: 10,
-        }}
-      >
-        <button style={buttonStyle} {...bind('right')} aria-label="Steer right">➜</button>
-        <button style={{ ...buttonStyle, transform: 'scaleX(-1)' }} {...bind('left')} aria-label="Steer left">➜</button>
-      </div>
-
-      <div
-        style={{
-          position: 'absolute',
-          left: 'max(90px, env(safe-area-inset-left) + 74px)',
-          bottom: 'max(24px, env(safe-area-inset-bottom))',
-          zIndex: 10,
-        }}
-      >
         <button
           style={{
             ...buttonStyle,
@@ -92,6 +75,39 @@ export function Controls() {
         >
           BRAKE
         </button>
+      </div>
+
+      {/* right cluster: LEFT + RIGHT side by side, raised, with instructions
+          directly underneath them */}
+      <div
+        style={{
+          position: 'absolute',
+          right: 'max(16px, env(safe-area-inset-right))',
+          bottom: RAISED,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          gap: 10,
+          zIndex: 10,
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'row', gap: 14 }}>
+          <button style={{ ...buttonStyle, transform: 'scaleX(-1)' }} {...bind('left')} aria-label="Steer left">➜</button>
+          <button style={buttonStyle} {...bind('right')} aria-label="Steer right">➜</button>
+        </div>
+        <div
+          style={{
+            color: 'white',
+            fontSize: 12,
+            opacity: 0.75,
+            textAlign: 'right',
+            lineHeight: 1.3,
+            maxWidth: 200,
+            pointerEvents: 'none',
+          }}
+        >
+          Steer with the arrows.<br />Gas and brake on the left.
+        </div>
       </div>
     </>
   );

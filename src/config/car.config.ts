@@ -17,12 +17,11 @@ export const CAR_CONFIG = {
     lookAheadDistance: 12,
     fov: 62,
   },
-    assetScale: 2.5,        // tune once you see it render — 10x up/down if invisible or giant // set to Math.PI if the car visually faces backward after the swap
-assetRotationY: -Math.PI / 2,   // was 0 — this is the clockwise 90° turn (viewed from above)
-
-assetRotationX: -Math.PI / 2,  // most common fix for a Z-up export landing in a Y-up scene
+    assetScale: 1.8,          // tuned by eye against the road width
+  assetRotationY: -Math.PI / 2,  // GLB length runs along X; yaw 90° so it points down the road (-Z)
+  assetRotationX: 0,        // model is already Y-up — no up-axis fix needed
   assetRotationZ: 0,
-  assetYOffset: 0,    
+  assetYOffset: 0,
 
    centeringAssist: 1.4,
 

@@ -3,9 +3,31 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
+  overflow-x: hidden; /* no sideways scroll → no thin white gutter at the edge */
+  background: #180a2e; /* dark dusk base: any sub-pixel gap reads dark, never white */
   overscroll-behavior: none; /* kills pull-to-refresh/bounce that fights the game */
+  font-family: var(--font-rounded), system-ui, sans-serif; /* rounded bouncy font app-wide */
 }
 
 * {
   -webkit-tap-highlight-color: transparent; /* removes the gray flash on mobile taps */
+}
+
+/* Shared loading spinner used at every "please wait" point in the app. */
+@keyframes gta67-spin {
+  to { transform: rotate(360deg); }
+}
+.gta67-spinner {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 5px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #ff2fb0;
+  border-right-color: #ffd23f;
+  animation: gta67-spin 0.8s linear infinite;
+}
+.gta67-spinner.small {
+  width: 20px;
+  height: 20px;
+  border-width: 3px;
 }

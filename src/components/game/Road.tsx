@@ -45,7 +45,7 @@ function useRoadTexture() {
 export function Road({ curve }: { curve: THREE.CatmullRomCurve3 }) {
   const totalWidth = ROAD_CONFIG.width + ROAD_CONFIG.shoulderWidth * 2;
   const geometry = useMemo(
-    () => buildRoadGeometry(curve, totalWidth, ROAD_CONFIG.segments),
+    () => buildRoadGeometry(curve, totalWidth, ROAD_CONFIG.segments, curve.getLength()),
     [curve, totalWidth]
   );
   const texture = useRoadTexture();
