@@ -36,7 +36,7 @@ export default function CharacterPage() {
           fontWeight: 600,
         }}
       >
-        Edit your character in the image editor, then hit the road at sunset
+        Customize your character in the UNLAYER image editor, then hit the road at sunset
       </p>
       <CharacterEditor />
     </main>

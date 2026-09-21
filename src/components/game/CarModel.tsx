@@ -3,6 +3,7 @@ import { useMemo, useEffect, useLayoutEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { CAR_CONFIG } from '@/config/car.config';
+import { driveState } from '@/lib/drive-state';
 
 /*
   The player's car — the real /models/car.glb asset.
@@ -22,7 +23,7 @@ import { CAR_CONFIG } from '@/config/car.config';
 
 useGLTF.preload('/models/car.glb');
 
-const CAR_BODY_COLOR = new THREE.Color('#bfe4ff'); // soft, light sky blue
+const CAR_BODY_COLOR = new THREE.Color('#03a1fc'); // bright sky blue
 
 export function CarModel() {
   const { scene } = useGLTF('/models/car.glb');
@@ -69,6 +70,18 @@ export function CarModel() {
     if (!isFinite(box.min.y)) return; // asset not resolved yet — skip
     const modelMinRel = box.min.y - parentY - g.position.y; // lowest point vs g origin
     g.position.y = CAR_CONFIG.assetYOffset - modelMinRel;
+
+    // Publish the car's TRUE rendered half-extents so obstacle/coin collision
+    // matches the visible car exactly. Measured at mount, when the straight road
+    // gives the car a ~0 yaw, so world X/Z line up with the car's width/length.
+    const hw = (box.max.x - box.min.x) / 2;
+    const hl = (box.max.z - box.min.z) / 2;
+    const hh = (box.max.y - box.min.y) / 2;
+    if (isFinite(hw) && hw > 0.1 && isFinite(hl) && hl > 0.1) {
+      driveState.carHalfWidth = hw;
+      driveState.carHalfLength = hl;
+      if (isFinite(hh) && hh > 0.1) driveState.carHalfHeight = hh;
+    }
   }, [model]);
 
   // Free the cloned graph + cloned materials when the car unmounts.

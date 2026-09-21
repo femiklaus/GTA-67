@@ -10,6 +10,7 @@ import { GamepadControls } from './GamepadControls';
 import { Road } from './Road';
 import { SunsetSky } from './SunsetSky';
 import { CarModel } from './CarModel';
+import { CarAccents } from './CarAccents';
 import { DecorPalms, DecorBuildings, ObstacleField, CoinField } from './WorldFields';
 import { ROAD_CONFIG } from '@/config/environment.config';
 import { CAR_CONFIG } from '@/config/car.config';
@@ -141,6 +142,7 @@ function DrivingRig({ curve, runId }: { curve: THREE.CatmullRomCurve3; runId: nu
   return (
     <group ref={carGroup}>
       <CarModel />
+      <CarAccents />
     </group>
   );
 }
@@ -153,7 +155,18 @@ export function Scene() {
     <>
       <KeyboardControls />
       <GamepadControls />
-      <Canvas shadows camera={{ fov: CAR_CONFIG.camera.fov, near: 0.1, far: 1000 }}>
+      {/*
+        Performance: shadows OFF (they cost a full extra scene pass every frame
+        and tank modest laptop GPUs to ~1fps once all the roadside GLBs load);
+        DPR capped so high-density screens don't render 2–3× the pixels; and the
+        camera far-plane pulled in to 450 — everything past ~400 units is already
+        fully hidden by the day fog, so nothing visible is lost but far decor is
+        no longer drawn.
+      */}
+      <Canvas
+        dpr={[1, 1.5]}
+        camera={{ fov: CAR_CONFIG.camera.fov, near: 0.1, far: 450 }}
+      >
         <Suspense fallback={null}>
           <SunsetSky />
           <Road curve={curve} />

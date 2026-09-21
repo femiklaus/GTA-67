@@ -1,32 +1,32 @@
 'use client';
-import { Sky } from '@react-three/drei';
-import { SKY_CONFIG, FOG_CONFIG, GROUND_CONFIG } from '@/config/environment.config';
+import { FOG_CONFIG, GROUND_CONFIG } from '@/config/environment.config';
+
+/*
+  Bright daytime sky.
+
+  A flat, bright sky-blue background (#9ddbfc) with fog set to the exact same
+  blue, so the road and roadside decor fade seamlessly into the horizon with no
+  hard seam. Lit by a high neutral sun (plus a soft cool fill) so the whole
+  scene reads as a clear day rather than a dusk/sunset.
+*/
+
+const DAY_SKY = '#9ddbfc';
 
 export function SunsetSky() {
   return (
     <>
-      <Sky
-        turbidity={SKY_CONFIG.turbidity}
-        rayleigh={SKY_CONFIG.rayleigh}
-        mieCoefficient={SKY_CONFIG.mieCoefficient}
-        mieDirectionalG={SKY_CONFIG.mieDirectionalG}
-        sunPosition={SKY_CONFIG.sunPosition}
-      />
-      <fogExp2 attach="fog" args={[FOG_CONFIG.color, FOG_CONFIG.density]} />
-      {/* warm dusk ambience: soft pink fill + a low orange "sunset" key light.
-          Lifted a little for a brighter, happier sunset without blowing it out. */}
-      <ambientLight intensity={0.9} color="#ffe3cc" />
-      <hemisphereLight args={['#ffc7a0', '#3a2a52', 0.8]} />
-      <directionalLight
-        position={[-60, 22, -40]}
-        intensity={2.1}
-        color="#ff8a4a"
-        castShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
-      />
-      {/* cool rim light from the opposite side for that neon-city separation */}
-      <directionalLight position={[50, 30, 30]} intensity={0.5} color="#7ad6ff" />
+      {/* Solid bright-blue day sky. */}
+      <color attach="background" args={[DAY_SKY]} />
+      {/* Fog matches the sky exactly so distance melts into the horizon. */}
+      <fogExp2 attach="fog" args={[DAY_SKY, FOG_CONFIG.density]} />
+
+      {/* Daytime lighting: bright sky-tinted fill + a high neutral sun. */}
+      <ambientLight intensity={0.95} color="#eaf6ff" />
+      <hemisphereLight args={['#cdeeff', '#2a2340', 0.85]} />
+      <directionalLight position={[-50, 60, -30]} intensity={2.0} color="#fff4e0" />
+      {/* Soft cool fill from the opposite side to keep shadows from going flat. */}
+      <directionalLight position={[50, 40, 30]} intensity={0.45} color="#bfe4ff" />
+
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow>
         <circleGeometry args={[GROUND_CONFIG.radius, 64]} />
         <meshStandardMaterial color={GROUND_CONFIG.color} />

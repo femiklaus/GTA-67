@@ -15,6 +15,33 @@ import { Model as StoreyGeneric } from './storeyAsset';
 import { BUILDING_ASSET_CONFIGS } from '@/config/assets.config';
 
 const lerp = THREE.MathUtils.lerp;
+const clamp = THREE.MathUtils.clamp;
+
+// Physical footprint radii (world units) of the pieces the car can touch.
+//   Cone: the widest part is the 1.0-wide base → radius 0.5.
+//   Coin: cylinder r 0.55 + rim → ~0.6.
+const CONE_RADIUS = 0.5;
+const COIN_RADIUS = 0.6;
+
+// Accurate top-down contact test between the car and a round item.
+//
+// The car is treated as an axis-aligned rectangle centred on (lateral, dist)
+// using its REAL rendered half-extents (published by CarModel), and the item as
+// a circle of radius `r` centred on (lane, dist). We find the point on the car
+// rectangle closest to the item centre and check whether it lies inside the
+// circle. This fires the exact instant the shapes touch — no premature hit while
+// still visibly apart, and no missed hit once they overlap. Because both the
+// collision and the rendering read the same `lane`/`dist`, the test is perfectly
+// in sync with what the player sees.
+function carTouchesCircle(itemDist: number, itemLane: number, r: number): boolean {
+  const dx = itemLane - driveState.lateral;
+  const dz = itemDist - driveState.dist;
+  const nx = clamp(dx, -driveState.carHalfWidth, driveState.carHalfWidth);
+  const nz = clamp(dz, -driveState.carHalfLength, driveState.carHalfLength);
+  const ex = dx - nx;
+  const ez = dz - nz;
+  return ex * ex + ez * ez < r * r;
+}
 
 /* -------------------------------------------------------------------------- */
 /*  Roadside decoration — palms & buildings that stream by and recycle.        */
@@ -228,9 +255,13 @@ export function ObstacleField() {
       cursor.current += spacing + Math.random() * spacing * 0.5;
     }
 
-    // position, collide, and publish active rows for the coin field
-    const carX = driveState.lateral;
-    const pub: { dist: number; lane: number }[] = [];
+    // Position every cone, publish the active rows for the coin field, and run an
+    // accurate contact check on EACH active cone. The whole pool is scanned every
+    // frame, so every cone — including ones just spawned for new road ahead or
+    // recycled from behind — is individually accounted for. Reuse the published
+    // array in place to avoid allocating a fresh one each frame.
+    const obs = driveState.obstacles;
+    obs.length = 0;
     for (let i = 0; i < POOL; i++) {
       const s = slots.current[i];
       const g = groups.current[i];
@@ -238,12 +269,10 @@ export function ObstacleField() {
       g.visible = s.active;
       if (!s.active) continue;
       g.position.set(s.lane, 0, -s.dist);
-      pub.push({ dist: s.dist, lane: s.lane });
-      if (Math.abs(s.dist - cd) < G.collisionZ && Math.abs(s.lane - carX) < G.collisionX) {
-        st.crash();
-      }
+      obs.push({ dist: s.dist, lane: s.lane });
+      // Touch the cone → the run ends immediately.
+      if (carTouchesCircle(s.dist, s.lane, CONE_RADIUS)) st.crash();
     }
-    driveState.obstacles = pub;
   });
 
   return (
@@ -336,8 +365,9 @@ export function CoinField() {
       cursor.current += spacing + Math.random() * spacing * 0.4;
     }
 
-    const carX = driveState.lateral;
     const value = Math.round(G.coinValue * (1 + diff)); // worth more the deeper you go
+    // Scan the whole pool every frame so every coin — including ones just spawned
+    // for new road ahead or recycled from behind — is individually accounted for.
     for (let i = 0; i < POOL; i++) {
       const s = slots.current[i];
       const g = groups.current[i];
@@ -347,7 +377,9 @@ export function CoinField() {
       if (!show) continue;
       g.position.set(s.lane, 1.1 + Math.sin(t * 3 + s.phase) * 0.12, -s.dist);
       g.rotation.y = t * 2.6;
-      if (Math.abs(s.dist - cd) < G.coinGrabZ && Math.abs(s.lane - carX) < G.coinGrabX) {
+      // Accurate contact → collect exactly once: hide it and add the score a
+      // single time (the `collected` flag then removes it from this scan).
+      if (!s.collected && carTouchesCircle(s.dist, s.lane, COIN_RADIUS)) {
         s.collected = true;
         g.visible = false;
         st.addScore(value);
